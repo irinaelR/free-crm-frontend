@@ -4,8 +4,8 @@ import {useNavigate} from "react-router";
 import Swal from 'sweetalert2';
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('admin@root.com');
+    const [password, setPassword] = useState('123456');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -21,13 +21,14 @@ const Login: React.FC = () => {
 
             localStorage.setItem('accessToken', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
+            // sessionStorage.setItem('usrId', response.data.id);
 
             const fullName = response.data?.firstName + ' ' + response.data?.lastName;
             Swal.fire({
                 icon: 'success',
                 title: 'Login Successful',
                 text: `Welcome ${fullName}! You will be redirected to home shortly.`,
-                timer: 5000,
+                timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false
             }).then(() => {
