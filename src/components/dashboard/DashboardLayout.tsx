@@ -20,8 +20,6 @@ const DashboardLayout: React.FC = () => {
         fetchTotals();
     }, []);
 
-
-
     return (
         <div className="flex flex-col p-2">
             <div className="flex items-center justify-between gap-4 p-6">

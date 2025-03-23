@@ -5,7 +5,7 @@ import {FaChevronRight} from "react-icons/fa6";
 const TotalCard: React.FC<TotalProps> = ({redirect, displayTitle, value}) => {
     const navigate = useNavigate();
     const goToDetails = () => {
-        navigate(redirect);
+        navigate("/Home" + redirect);
     }
     function formatNumber(num: number): string {
         if (num >= 1000000000) {
