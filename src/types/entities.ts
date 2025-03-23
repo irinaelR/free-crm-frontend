@@ -42,6 +42,13 @@ export interface Expense {
     updatedById: string;
 }
 
+export interface AlertConfig {
+    id: string;
+    percentage: number;
+    dateAdded: Date;
+    dateUpdated: Date;
+}
+
 export interface Status {
     id: string;
     name: string;

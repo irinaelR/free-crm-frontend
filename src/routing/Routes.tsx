@@ -6,11 +6,12 @@ import CampaignDetails from "../components/details/CampaignDetails.tsx";
 import BudgetDetails from "../components/details/BudgetDetails.tsx";
 import ExpenseDetails from "../components/details/ExpenseDetails.tsx";
 import { Navigate } from "react-router-dom";
+import AlertConfigForm from "../components/alert/AlertConfigForm.tsx";
 
 export const browserRouter = createBrowserRouter([
     {
         path: "/",
-        element: <Navigate to="/Home" replace />
+        element: <Navigate to="/Login" replace />
     },
     {
         path: "/Login",
@@ -43,6 +44,10 @@ export const browserRouter = createBrowserRouter([
             {
                 path: "Details/Expense",
                 element: <ExpenseDetails />
+            },
+            {
+                path: "AlertConfig",
+                element: <AlertConfigForm />
             }
         ]
     }
