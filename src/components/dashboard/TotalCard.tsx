@@ -20,7 +20,7 @@ const TotalCard: React.FC<TotalProps> = ({redirect, displayTitle, value}) => {
     }
     return (
         <div className="bg-white rounded-xl shadow-md p-6 cursor-pointer w-1/3 flex flex-col items-center">
-            <h3 className="text-xl font-black text-gray-800 font-medium mb-2">{displayTitle}</h3>
+            <h3 className="text-xl text-gray-800 font-medium mb-2">{displayTitle}</h3>
             <p className="text-6xl font-bold">{formatNumber(value)}</p>
             <button onClick={() => goToDetails()} className="text-blue-500 hover:text-blue-700 hover:underline cursor-pointer my-6 flex flex-row items-center gap-2">View details <FaChevronRight /></button>
         </div>

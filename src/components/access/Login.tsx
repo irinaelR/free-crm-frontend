@@ -21,7 +21,7 @@ const Login: React.FC = () => {
 
             localStorage.setItem('accessToken', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
-            // sessionStorage.setItem('usrId', response.data.id);
+            sessionStorage.setItem('usrId', response.data.id);
 
             const fullName = response.data?.firstName + ' ' + response.data?.lastName;
             Swal.fire({

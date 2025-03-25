@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import LogoutBtn from "./LogoutBtn.tsx";
 
 const Navbar: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -27,85 +28,88 @@ const Navbar: React.FC = () => {
         <nav className="bg-gray-800 text-white">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
-                    <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                            <Link to="/Home/Dashboard" className="text-xl font-bold">
-                                Free-CRM
-                            </Link>
-                        </div>
-                        <div className="hidden md:block">
-                            <div className="ml-10 flex items-baseline space-x-4">
-                                <Link
-                                    to="/Home/Dashboard"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium ${
-                                        isActive('/Home/Dashboard')
-                                            ? 'bg-gray-900 text-white'
-                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                                    }`}
-                                >
-                                    Dashboard
+                    <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <Link to="/Home/Dashboard" className="text-xl font-bold">
+                                    Free-CRM
                                 </Link>
-
-                                {/* Details Dropdown */}
-                                <div className="relative">
-                                    <button
+                            </div>
+                            <div className="hidden md:block">
+                                <div className="ml-10 flex items-baseline space-x-4">
+                                    <Link
+                                        to="/Home/Dashboard"
                                         className={`px-3 py-2 rounded-md text-sm font-medium ${
-                                            detailsItems.some(item => isActive(item.path))
+                                            isActive('/Home/Dashboard')
                                                 ? 'bg-gray-900 text-white'
                                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                                         }`}
-                                        onClick={toggleDropdown}
                                     >
-                                        Details
-                                        <svg
-                                            className="ml-1 -mr-0.5 h-4 w-4 inline-block"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                            aria-hidden="true"
+                                        Dashboard
+                                    </Link>
+
+                                    {/* Details Dropdown */}
+                                    <div className="relative">
+                                        <button
+                                            className={`px-3 py-2 rounded-md text-sm font-medium ${
+                                                detailsItems.some(item => isActive(item.path))
+                                                    ? 'bg-gray-900 text-white'
+                                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                            }`}
+                                            onClick={toggleDropdown}
                                         >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </button>
+                                            Details
+                                            <svg
+                                                className="ml-1 -mr-0.5 h-4 w-4 inline-block"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
 
-                                    {isDropdownOpen && (
-                                        <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                                            <div className="py-1">
-                                                {detailsItems.map((item) => (
-                                                    <Link
-                                                        key={item.name}
-                                                        to={item.path}
-                                                        className={`block px-4 py-2 text-sm ${
-                                                            isActive(item.path)
-                                                                ? 'bg-gray-100 text-gray-900'
-                                                                : 'text-gray-700 hover:bg-gray-100'
-                                                        }`}
-                                                        onClick={closeDropdown}
-                                                    >
-                                                        {item.name} Details
-                                                    </Link>
-                                                ))}
+                                        {isDropdownOpen && (
+                                            <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                                                <div className="py-1">
+                                                    {detailsItems.map((item) => (
+                                                        <Link
+                                                            key={item.name}
+                                                            to={item.path}
+                                                            className={`block px-4 py-2 text-sm ${
+                                                                isActive(item.path)
+                                                                    ? 'bg-gray-100 text-gray-900'
+                                                                    : 'text-gray-700 hover:bg-gray-100'
+                                                            }`}
+                                                            onClick={closeDropdown}
+                                                        >
+                                                            {item.name} Details
+                                                        </Link>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
 
-                                <Link
-                                    to="/Home/AlertConfig"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium ${
-                                        isActive('/Home/AlertConfig')
-                                            ? 'bg-gray-900 text-white'
-                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                                    }`}
-                                >
-                                    Alert Config
-                                </Link>
+                                    <Link
+                                        to="/Home/AlertConfig"
+                                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                                            isActive('/Home/AlertConfig')
+                                                ? 'bg-gray-900 text-white'
+                                                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        }`}
+                                    >
+                                        Alert Config
+                                    </Link>
+                                </div>
                             </div>
                         </div>
+                        <LogoutBtn />
                     </div>
 
                     {/* Mobile menu button */}

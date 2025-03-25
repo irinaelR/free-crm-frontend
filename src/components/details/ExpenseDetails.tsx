@@ -5,6 +5,7 @@ import axiosInstance from "../../api/AxiosConfig.ts";
 import {FaChevronLeft} from "react-icons/fa6";
 import GenericTable from "../common/GenericTable.tsx";
 import {DeleteRequest, ExpenseUpdateRequest} from "../../types/dto.ts";
+import Swal from "sweetalert2";
 
 const ExpenseDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -58,7 +59,12 @@ const ExpenseDetails: React.FC = () => {
                 return c;
             }));
         } catch (error) {
-            console.error('Error deleting expense:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Budget update failed',
+                text: error.response.data,
+                confirmButtonText: 'Try again'
+            });
         }
     }
     const handleDeleteExpense = async (rowData: any) => {
@@ -86,6 +92,7 @@ const ExpenseDetails: React.FC = () => {
                 modifiableCol={5}
                 onRowUpdate={handleUpdateExpense}
                 onRowDelete={handleDeleteExpense}
+                itemsPerPage={15}
             />
         </div>
     );

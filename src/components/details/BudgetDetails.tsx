@@ -5,6 +5,7 @@ import axiosInstance from "../../api/AxiosConfig.ts";
 import {FaChevronLeft} from "react-icons/fa6";
 import GenericTable from "../common/GenericTable.tsx";
 import {BudgetUpdateRequest, DeleteRequest} from "../../types/dto.ts";
+import Swal from "sweetalert2";
 
 const BudgetDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -60,7 +61,12 @@ const BudgetDetails: React.FC = () => {
             }));
 
         } catch (error) {
-            console.error('Error updating budget:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Budget update failed',
+                text: error.response.data,
+                confirmButtonText: 'Try again'
+            });
         }
     }
 
@@ -89,6 +95,7 @@ const BudgetDetails: React.FC = () => {
                 modifiableCol={5}
                 onRowUpdate={handleUpdateBudget}
                 onRowDelete={handleDeleteBudget}
+                itemsPerPage={5}
             />
         </div>
     );
