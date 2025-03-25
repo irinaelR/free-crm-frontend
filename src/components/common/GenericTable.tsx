@@ -1,5 +1,7 @@
 import { ReactNode, useState } from "react";
-import {FaPencil, FaCheck, FaXmark, FaTrash} from "react-icons/fa6";
+import {FaPencil, FaCheck, FaXmark, FaTrash, FaForward} from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import {FaBackward} from "react-icons/fa";
 
 type TableData = {
     headers: string[];
@@ -10,6 +12,7 @@ type TableData = {
     modifiableCol?: number; // Index of the column that should be modifiable
     onRowUpdate?: (rowData: any, modifiedValue: number) => Promise<void>; // Callback for row update
     onRowDelete?: (rowData: any) => Promise<void>; // Callback for row delete
+    itemsPerPage?: number; // Number of items to display per page
 };
 
 const GenericTable: React.FC<TableData> = ({
@@ -18,11 +21,21 @@ const GenericTable: React.FC<TableData> = ({
                                                modifiableCol,
                                                onRowUpdate,
                                                onRowDelete,
+                                               itemsPerPage = 10, // Default to 10 items per page
                                            }) => {
     const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null);
     const [modifiedValue, setModifiedValue] = useState<number>(0);
     const [isUpdating, setIsUpdating] = useState(false);
     const [removedRowIndex, setRemovedRowIndex] = useState<number | null>(null);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(tableContents.length / itemsPerPage);
+
+    // Get current page data
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = tableContents.slice(indexOfFirstItem, indexOfLastItem);
 
     const renderItem = (item: string | number | boolean | Date | ReactNode) => {
         if (item instanceof Date) {
@@ -49,8 +62,10 @@ const GenericTable: React.FC<TableData> = ({
 
         try {
             setIsUpdating(true);
+            // Calculate the actual index in the original data
+            const actualRowIndex = indexOfFirstItem + rowIndex;
             // Get the row data to send to the API
-            const rowData = tableContents[rowIndex];
+            const rowData = tableContents[actualRowIndex];
             await onRowUpdate(rowData, modifiedValue);
             setEditingRowIndex(null);
         } catch (error) {
@@ -64,9 +79,17 @@ const GenericTable: React.FC<TableData> = ({
         if (!onRowDelete) return;
 
         try {
-            const rowData = tableContents[rowIndex];
+            // Calculate the actual index in the original data
+            const actualRowIndex = indexOfFirstItem + rowIndex;
+            const rowData = tableContents[actualRowIndex];
             await onRowDelete(rowData);
-            tableContents.splice(rowIndex, 1);
+            tableContents.splice(actualRowIndex, 1);
+
+            // Check if we need to adjust the current page after deletion
+            if (currentItems.length === 1 && currentPage > 1) {
+                setCurrentPage(currentPage - 1);
+            }
+
             setRemovedRowIndex(null);
         } catch (err) {
             console.error('Error deleting row:', err);
@@ -126,12 +149,11 @@ const GenericTable: React.FC<TableData> = ({
                                         handleDelete(rowIndex);
                                     }}
                                     className="ml-2 p-1.5 text-red-500 cursor-pointer rounded hover:text-red-600 text-base"
-                                    title="Modify amount"
+                                    title="Delete row"
                                 >
                                     <FaTrash size={14} />
                                 </button>
                             </div>
-
                         )}
                     </div>
                 );
@@ -150,6 +172,64 @@ const GenericTable: React.FC<TableData> = ({
         return "w-0";
     };
 
+    // Page change handlers
+    const goToNextPage = () => {
+        setCurrentPage(page => Math.min(page + 1, totalPages));
+        setEditingRowIndex(null); // Cancel any editing when changing pages
+    };
+
+    const goToPreviousPage = () => {
+        setCurrentPage(page => Math.max(page - 1, 1));
+        setEditingRowIndex(null); // Cancel any editing when changing pages
+    };
+
+    const goToPage = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        setEditingRowIndex(null); // Cancel any editing when changing pages
+    };
+
+    const goToFirstPage = () => {
+        setEditingRowIndex(null);
+        setCurrentPage(1);
+    }
+
+    const goToLastPage = () => {
+        setEditingRowIndex(null);
+        setCurrentPage(totalPages);
+    }
+
+    // Generate pagination buttons
+    const renderPaginationButtons = () => {
+        const pageButtons = [];
+        const maxPageButtons = 5; // Maximum number of page buttons to show
+
+        let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+        // Adjust if we're at the end
+        if (endPage - startPage + 1 < maxPageButtons) {
+            startPage = Math.max(1, endPage - maxPageButtons + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageButtons.push(
+                <button
+                    key={i}
+                    onClick={() => goToPage(i)}
+                    className={`px-3 py-1 mx-1 rounded ${
+                        currentPage === i
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pageButtons;
+    };
+
     return (
         <div className="rounded-lg overflow-hidden shadow-md">
             <table className="w-full text-left min-w-max rounded-lg font-body">
@@ -165,13 +245,13 @@ const GenericTable: React.FC<TableData> = ({
                     ))}
                 </tr>
                 </thead>
-                {tableContents && tableContents.length > 0 ? (
+                {currentItems && currentItems.length > 0 ? (
                     <tbody>
-                    {tableContents.map((row, rowIndex) => (
+                    {currentItems.map((row, rowIndex) => (
                         <tr
                             key={rowIndex}
                             className={
-                                rowIndex < tableContents.length - 1
+                                rowIndex < currentItems.length - 1
                                     ? "border-b border-b-blue-100"
                                     : ""
                             }
@@ -188,9 +268,58 @@ const GenericTable: React.FC<TableData> = ({
                     ))}
                     </tbody>
                 ) : (
-                    ""
+                    <tbody>
+                    <tr>
+                        <td colSpan={headers.length} className="p-4 text-center">
+                            No data available
+                        </td>
+                    </tr>
+                    </tbody>
                 )}
             </table>
+
+            {/* Pagination Controls */}
+            {tableContents.length > itemsPerPage && (
+                <div className="flex justify-between items-center bg-gray-100 p-4 border-t">
+                    <div className="text-sm text-gray-600">
+                        Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, tableContents.length)} of {tableContents.length} entries
+                    </div>
+                    <div className="flex items-center">
+                        <button
+                            onClick={goToFirstPage}
+                            disabled={currentPage === 1}
+                            className="p-2 mx-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <FaBackward size={14} />
+                        </button>
+
+                        <button
+                            onClick={goToPreviousPage}
+                            disabled={currentPage === 1}
+                            className="p-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <FaChevronLeft size={14} />
+                        </button>
+
+                        {renderPaginationButtons()}
+
+                        <button
+                            onClick={goToNextPage}
+                            disabled={currentPage === totalPages}
+                            className="p-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <FaChevronRight size={14} />
+                        </button>
+                        <button
+                            onClick={goToLastPage}
+                            disabled={currentPage === totalPages}
+                            className="p-2 mx-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <FaForward size={14} />
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -91,8 +91,16 @@ const AlertConfigForm: React.FC = () => {
             <h1 className="text-xl font-bold mb-4">Update Alert Configuration</h1>
 
             <div className="mb-4">
-                <p><span className="font-semibold">Date Added:</span> {new Date(alertRate.dateAdded).toLocaleString()}</p>
-                <p><span className="font-semibold">Last Updated:</span> {new Date(alertRate.dateUpdated).toLocaleString()}</p>
+                <p><span className="font-semibold">Date Added:</span> {new Date(alertRate.dateAdded).toLocaleDateString("en-US", {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                })}</p>
+                <p><span className="font-semibold">Last Updated:</span> {new Date(alertRate.dateUpdated).toLocaleDateString("en-US", {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                })}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4">

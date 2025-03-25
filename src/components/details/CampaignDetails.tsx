@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import axiosInstance from "../../api/AxiosConfig.ts";
 import {FaChevronLeft} from "react-icons/fa6";
 import {useNavigate} from "react-router";
+import Swal from "sweetalert2";
 
 const CampaignDetails : React.FC = () => {
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -51,7 +52,12 @@ const CampaignDetails : React.FC = () => {
             }));
 
         } catch (error) {
-            console.error('Error updating campaign:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Budget update failed',
+                text: error.response.data,
+                confirmButtonText: 'Try again'
+            });
         }
     };
 
@@ -91,6 +97,7 @@ const CampaignDetails : React.FC = () => {
                 modifiableCol={2}
                 onRowUpdate={handleUpdateCampaign}
                 onRowDelete={handleDeleteCampaign}
+                itemsPerPage={5}
             />
         </div>
     );
