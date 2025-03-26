@@ -48,7 +48,7 @@ const GenericTable: React.FC<TableData> = ({
             return item.toLocaleString("en-EN", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-            }); // e.g., "1 234,56"
+            });
         } else if (typeof item === "boolean") {
             return <input type="checkbox" checked={item} disabled />;
         } else {

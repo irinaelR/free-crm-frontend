@@ -71,8 +71,9 @@ const AlertConfigForm: React.FC = () => {
         } catch (err) {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'Failed to update AlertConfig',
+                title: 'Failed to update alert config',
+                text: err.response.data,
+                confirmButtonText: 'Try again'
             });
         }
     };

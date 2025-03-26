@@ -106,6 +106,17 @@ const Navbar: React.FC = () => {
                                     >
                                         Alert Config
                                     </Link>
+
+                                    <Link
+                                        to="/Home/UploadData"
+                                        className={`px-3 py-2 rounded-md text-sm font-medium ${
+                                            isActive('/Home/Dashboard')
+                                                ? 'bg-gray-900 text-white'
+                                                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        }`}
+                                    >
+                                        Upload duplicate file
+                                    </Link>
                                 </div>
                             </div>
                         </div>

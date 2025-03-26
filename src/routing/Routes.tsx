@@ -7,6 +7,7 @@ import BudgetDetails from "../components/details/BudgetDetails.tsx";
 import ExpenseDetails from "../components/details/ExpenseDetails.tsx";
 import { Navigate } from "react-router-dom";
 import AlertConfigForm from "../components/alert/AlertConfigForm.tsx";
+import UploadData from "../components/common/UploadData.tsx";
 
 export const browserRouter = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ export const browserRouter = createBrowserRouter([
             {
                 path: "AlertConfig",
                 element: <AlertConfigForm />
+            },
+            {
+                path: "UploadData",
+                element: <UploadData />
             }
         ]
     }
